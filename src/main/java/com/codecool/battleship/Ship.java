@@ -8,8 +8,8 @@ import com.codecool.battleship.util.ShipType;
 import java.util.List;
 
 public class Ship {
-    List<Square> shipsSquares;
-    ShipType shipType;
+    private List<Square> shipsSquares;
+    private ShipType shipType;
 
     public Ship(ShipType shipType) {
         this.shipType = shipType;
@@ -31,6 +31,8 @@ public class Ship {
     public void setShipType(ShipType shipType) {
         this.shipType = shipType;
     }
+
+
 
     @Override
     public String toString() {

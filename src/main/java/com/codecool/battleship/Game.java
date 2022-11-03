@@ -61,6 +61,8 @@ public class Game {
         if (player.getBoard().getOcean()[actualMove[0]][actualMove[1]].getSquareStatus().equals(SquareStatus.SHIP)) {
             displayMove(SquareStatus.HIT, actualMove, player);
             player.getBoard().getOcean()[actualMove[0]][actualMove[1]].setSquareStatus(SquareStatus.HIT);
+            player.handlingShots(player,actualMove);
+            System.out.println(player.getPoints()+"points");
         } else {
             displayMove(SquareStatus.MISSED, actualMove, player);
             player.getBoard().getOcean()[actualMove[0]][actualMove[1]].setSquareStatus(SquareStatus.MISSED);

@@ -5,7 +5,9 @@ package com.codecool.battleship;
 //        The Player class has an isAlive method that checks whether the player lost all ships and returns true or false accordingly.
 
 
+import com.codecool.battleship.util.Constant;
 import com.codecool.battleship.util.ShipType;
+import com.codecool.battleship.util.SquareStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,8 @@ public class Player {
     List<Ship> shipList;
     BoardFactory boardFactory;
     Board board;
+    String name;
+    int points;
 
     public Player() {
         shipList = new ArrayList<>();
@@ -29,7 +33,7 @@ public class Player {
 
     private void setRandomCoordinates() {
         int i = 0;
-        for (int j = shipList.size()-1; j >=0 ; j--) {
+        for (int j = shipList.size() - 1; j >= 0; j--) {
             boardFactory.randomPlacement(board, shipList.get(j));
         }
     }
@@ -43,21 +47,39 @@ public class Player {
         }
     }
 
-    public void handlingShots() {
-
+    public void handlingShots(Player player, int[] actualMove) {
+        addPoints(Constant.POINTS_FOR_HIT);
+        Ship ship = isTargetedShipSank(player, actualMove);
+        if (ship != null) addPoints(ship.getShipType().getLengthInSquare() * Constant.POINTS_FOR_SINK_SHIP);
     }
 
-    public boolean isAlive() {
-        //                        int shipLeft = 0;
-//                        for (Square[] squareArray : player1.getBoard().getOcean()
-//                        ) {
-//                            for (Square square : squareArray
-//                            ) {
-//                                if (square.getSquareStatus() == SquareStatus.SHIP)shipLeft++;
-//                            }
-//                        }
-//                        System.out.println(shipLeft);
-        return true;
+    public boolean isAlive(Player player) {
+
+        for (Ship ship : player.getShipList()
+        ) {
+            for (Square square : ship.getShipsSquares()
+            ) {
+                if (square.getSquareStatus() == SquareStatus.SHIP) return true;
+            }
+        }
+        return false;
+    }
+
+    public Ship isTargetedShipSank(Player player, int[] coordinates) {
+        for (Ship ship : player.getShipList()
+        ) {
+            boolean isSank = true;
+            boolean targetedShip = false;
+            for (Square square : ship.getShipsSquares()
+            ) {
+                if (square.getX() == coordinates[0] && square.getY() == coordinates[1]) {
+                    targetedShip = true;
+                }
+                if (square.getSquareStatus() == SquareStatus.SHIP) isSank = false;
+            }
+            if (isSank && targetedShip) return ship;
+        }
+        return null;
     }
 
     public List<Ship> getShipList() {
@@ -66,6 +88,26 @@ public class Player {
 
     public Board getBoard() {
         return board;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoint(int points) {
+        this.points = points;
+    }
+
+    public void addPoints(int plus) {
+        points += plus;
     }
 
     @Override
